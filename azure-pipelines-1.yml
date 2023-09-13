@@ -18,4 +18,4 @@ stages:
         kubernetesServiceEndpoint: 'HomeKube'
         command: 'apply'
         useConfigurationFile: true
-        configuration: 'k8s/deployment.yaml'
+        configuration: 'deployment.yaml'
