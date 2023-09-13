@@ -1,21 +1,27 @@
 trigger:
-  branches:
-    include:
-    - master
+- master
 
 resources:
-  - repo: self
+- repo: self
+
+variables:
+  containerRegistry: 'DockerHub'
+  imageName: 'TestWeb'
 
 stages:
-- stage: BuildAndPush
+- stage: Build
+  displayName: 'Build and push Docker image'
   jobs:
-  - job: DockerBuildAndPush
+  - job: Build
+    displayName: 'Build'
     pool:
+      name: 'Default'
       vmImage: 'ubuntu-latest'
     steps:
     - task: Docker@2
+      displayName: 'Build and push Docker image'
       inputs:
-        containerRegistry: 'DockerHub'
-        repository: 'UnboltedHD2500/docker-static-website'
         command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
+        repository: '$(containerRegistry)/$(imageName)'
+        dockerfile: '**/Dockerfile'
+        containerRegistry: 'DockerHub'
