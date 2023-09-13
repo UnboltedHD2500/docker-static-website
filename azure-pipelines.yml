@@ -1,20 +1,28 @@
 trigger:
-  branches:
-    include:
-    - master
+- master
 
-pool:
-  vmImage: 'ubuntu-latest'
+resources:
+- repo: self
+
+variables:
+  containerRegistry: 'peckma'
+  imageName: 'testweb'
 
 stages:
-- stage: DeployToKubernetes
+- stage: Build
+  displayName: 'Build and push Docker image'
   jobs:
-  - job: DeployJob
+  - job: Build
+    displayName: 'Build'
+    pool:
+      name: 'Default'
+      vmImage: 'ubuntu-latest'
     steps:
-    - task: Kubernetes@1
+    - task: Docker@2
+      displayName: 'Build and push Docker image'
       inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceEndpoint: 'HomeKube'
-        command: 'apply'
-        useConfigurationFile: true
-        configuration: 'deployment.yaml'
+        command: 'buildAndPush'
+        repository: '$(containerRegistry)/$(imageName)'
+        dockerfile: '**/Dockerfile'
+        containerRegistry: 'DockerHub'
+        tags: 'latest'
