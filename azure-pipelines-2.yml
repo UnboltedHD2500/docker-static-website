@@ -22,6 +22,6 @@ stages:
       displayName: 'Build and push Docker image'
       inputs:
         command: 'buildAndPush'
-        repository: 'peckma/TestWeb'
+        repository: 'peckma/TestWeb:latest'
         dockerfile: '**/Dockerfile'
         containerRegistry: 'DockerHub'
