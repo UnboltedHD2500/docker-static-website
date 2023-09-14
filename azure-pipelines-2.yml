@@ -9,7 +9,7 @@ pool:
 
 variables:
   containerRegistry: 'peckma'
-  imageName: 'testweb'
+  imageName: 'oneswoop'
 
 stages:
 - stage: Build
