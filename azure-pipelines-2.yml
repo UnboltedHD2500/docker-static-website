@@ -21,15 +21,23 @@ stages:
       name: 'Default'
       vmImage: 'ubuntu-latest'
     steps:
+    
     - task: Docker@2
-      displayName: 'Build and push Docker image'
       inputs:
-        command: 'buildAndPush'
-        repository: '$(containerRegistry)/$(imageName)'
-        dockerfile: '**/Dockerfile'
         containerRegistry: 'DockerHub'
-        tags: 'latest'
+        repository: '$(containerRegistry)/$(imageName)'
+        command: 'build'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          latest
         arguments: '--no-cache'
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'DockerHub'
+        repository: '$(containerRegistry)/$(imageName)'
+        command: 'push'
+        tags: |
+          latest
 
 - stage: DeployToKubernetes
   jobs:
