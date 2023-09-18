@@ -10,6 +10,7 @@ pool:
 variables:
   containerRegistry: 'peckma'
   imageName: 'oneswoop'
+  uniqueTag: $(Build.BuildId)
 
 stages:
 - stage: Build
@@ -21,7 +22,6 @@ stages:
       name: 'Default'
       vmImage: 'ubuntu-latest'
     steps:
-    
     - task: Docker@2
       inputs:
         containerRegistry: 'DockerHub'
@@ -29,7 +29,7 @@ stages:
         command: 'build'
         Dockerfile: '**/Dockerfile'
         tags: |
-          latest
+          $(Build.BuildId)
         arguments: '--no-cache'
     - task: Docker@2
       inputs:
@@ -37,7 +37,7 @@ stages:
         repository: '$(containerRegistry)/$(imageName)'
         command: 'push'
         tags: |
-          latest
+          $(Build.BuildId)
 
 - stage: DeployToKubernetes
   jobs:
@@ -62,7 +62,7 @@ stages:
         echo     spec: >> temp-deployment.yaml
         echo       containers: >> temp-deployment.yaml
         echo       - name: webtest >> temp-deployment.yaml
-        echo         image: peckma/oneswoop:latest >> temp-deployment.yaml
+        echo         image: peckma/oneswoop:$(Build.BuildId) >> temp-deployment.yaml
         echo         ports: >> temp-deployment.yaml
         echo         - containerPort: 80 >> temp-deployment.yaml
         echo --- >> temp-deployment.yaml
