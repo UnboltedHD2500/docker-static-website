@@ -34,44 +34,42 @@ stages:
   - job: DeployJob
     steps:
     - script: |
-        cat <<EOF > temp-deployment.yaml
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: nginx-deployment
-          labels:
-            app: nginx
-        spec:
-          replicas: 1
-          selector:
-            matchLabels:
-              app: nginx
-          template:
-            metadata:
-              labels:
-                app: nginx
-            spec:
-              containers:
-              - name: webtest
-                image: peckma/oneswoop:latest
-                ports:
-                - containerPort: 80
-        ---
-        apiVersion: v1
-        kind: Service
-        metadata:
-          name: nginx-service
-          labels:
-            app: nginx
-        spec:
-          type: NodePort
-          ports:
-          - port: 80
-            targetPort: 80
-            nodePort: 30080
-          selector:
-            app: nginx
-        EOF
+        echo apiVersion: apps/v1 > temp-deployment.yaml
+        echo kind: Deployment >> temp-deployment.yaml
+        echo metadata: >> temp-deployment.yaml
+        echo   name: nginx-deployment >> temp-deployment.yaml
+        echo   labels: >> temp-deployment.yaml
+        echo     app: nginx >> temp-deployment.yaml
+        echo spec: >> temp-deployment.yaml
+        echo   replicas: 1 >> temp-deployment.yaml
+        echo   selector: >> temp-deployment.yaml
+        echo     matchLabels: >> temp-deployment.yaml
+        echo       app: nginx >> temp-deployment.yaml
+        echo   template: >> temp-deployment.yaml
+        echo     metadata: >> temp-deployment.yaml
+        echo       labels: >> temp-deployment.yaml
+        echo         app: nginx >> temp-deployment.yaml
+        echo     spec: >> temp-deployment.yaml
+        echo       containers: >> temp-deployment.yaml
+        echo       - name: webtest >> temp-deployment.yaml
+        echo         image: peckma/oneswoop:latest >> temp-deployment.yaml
+        echo         ports: >> temp-deployment.yaml
+        echo         - containerPort: 80 >> temp-deployment.yaml
+        echo --- >> temp-deployment.yaml
+        echo apiVersion: v1 >> temp-deployment.yaml
+        echo kind: Service >> temp-deployment.yaml
+        echo metadata: >> temp-deployment.yaml
+        echo   name: nginx-service >> temp-deployment.yaml
+        echo   labels: >> temp-deployment.yaml
+        echo     app: nginx >> temp-deployment.yaml
+        echo spec: >> temp-deployment.yaml
+        echo   type: NodePort >> temp-deployment.yaml
+        echo   ports: >> temp-deployment.yaml
+        echo   - port: 80 >> temp-deployment.yaml
+        echo     targetPort: 80 >> temp-deployment.yaml
+        echo     nodePort: 30080 >> temp-deployment.yaml
+        echo   selector: >> temp-deployment.yaml
+        echo     app: nginx >> temp-deployment.yaml
       displayName: 'Generate Inline K8s Config'
 
     - task: Kubernetes@1
@@ -81,5 +79,3 @@ stages:
         command: 'apply'
         useConfigurationFile: true
         configuration: 'temp-deployment.yaml'
-
-
